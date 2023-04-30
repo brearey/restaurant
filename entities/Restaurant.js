@@ -9,10 +9,20 @@ const RestaurantSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    slots: {
-        type: Array,
-        required: true,
-    },
+    slots: [{
+        date: {
+            type: String,
+            required: true,
+        },
+        time: {
+            type: String,
+            required: true,
+        },
+        isBooked: {
+            type: Boolean,
+            required: true,
+        },
+    }],
 }, {
     timestamps: true,
 });
