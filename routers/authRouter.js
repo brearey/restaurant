@@ -11,14 +11,17 @@ authRouter.use(function timeLog(req, res, next) {
 
 // Register
 try {
-  authRouter.post('/register', registerValidation, async function(req, res) {
-    const doc = new User({
-      phone: req.body.phone,
-      password: req.body.password,
-      name: req.body.name,
+  authRouter.post('/register', async function(req, res) {
+    res.send({
+      message: 'Регистрация',
     });
-    const user = await doc.save();
-    res.send(user);
+    // const doc = new User({
+    //   phone: req.body.phone,
+    //   password: req.body.password,
+    //   name: req.body.name,
+    // });
+    // const user = await doc.save();
+    // res.send(user);
   });
 } catch(err) {
   console.log(err);
