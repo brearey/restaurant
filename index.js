@@ -1,9 +1,12 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const bookingRouter = require('./routers/bookingRouter');
-const authRouter = require('./routers/authRouter');
+import express from 'express';
+import mongoose from 'mongoose';
+import bookingRouter from './routers/bookingRouter.js';
+import authRouter from './routers/authRouter.js';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
 const PORT = process.env.PORT || 3000;
-require('dotenv').config();
 
 const app = express();
 

@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Backend booking restaurant. Test challenge for OneSelf",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon index.js",
     "prefill": "node ./prefill/prefill.js"

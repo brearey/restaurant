@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
+import Restaurant from '../entities/Restaurant.js';
 const restaurantRouter = express.Router();
-const restaurant = require('../entities/Restaurant');
 
 // middleware that is specific to this router
 restaurantRouter.use(function timeLog(req, res, next) {
@@ -21,4 +21,4 @@ restaurantRouter.post('/', async function(req, res) {
     res.send(restaurant);
 });
 
-module.exports = restaurantRouter;
+export default restaurantRouter;

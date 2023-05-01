@@ -1,7 +1,8 @@
-const mongoose = require('mongoose');
-const Restaurant = require('../entities/Restaurant');
-const User = require('../entities/User');
-require('dotenv').config();
+import mongoose from 'mongoose';
+import Restaurant from '../entities/Restaurant.js';
+import User from '../entities/User.js';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 mongoose
   .connect(process.env.MONGODB_URI)

@@ -1,5 +1,5 @@
-var express = require('express');
-var bookingRouter = express.Router();
+import express from 'express';
+const bookingRouter = express.Router();
 
 // middleware that is specific to this router
 bookingRouter.use(function timeLog(req, res, next) {
@@ -68,4 +68,4 @@ bookingRouter.delete('/:id', function(req, res) {
   );
 });
 
-module.exports = bookingRouter;
+export default bookingRouter;

@@ -1,7 +1,8 @@
-const jwt = require('jsonwebtoken');
-const validationResult = require('express-validator');
-const User = require('../entities/User');
-require('dotenv').config();
+import jwt from 'jsonwebtoken';
+import { validationResult } from 'express-validator';
+import User from '../entities/User.js';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 export const register = async (req, res) => {
     try {

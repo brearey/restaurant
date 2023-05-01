@@ -1,10 +1,10 @@
-const express = require('express');
+import express from 'express';
+import User from '../entities/User.js';
+import { loginValidation, registerValidation } from '../utils/validations.js';
 const authRouter = express.Router();
-const User = require('../entities/User');
-const { loginValidation, registerValidation, postCreateValidation } = require('./validations.js');
 
 // middleware that is specific to this router
-userRouter.use(function timeLog(req, res, next) {
+authRouter.use(function timeLog(req, res, next) {
   console.log('TODO: log this ', Date.now());
   next();
 });
@@ -12,7 +12,13 @@ userRouter.use(function timeLog(req, res, next) {
 // Register
 try {
   authRouter.post('/register', registerValidation, async function(req, res) {
-    
+    const doc = new User({
+      phone: req.body.phone,
+      password: req.body.password,
+      name: req.body.name,
+    });
+    const user = await doc.save();
+    res.send(user);
   });
 } catch(err) {
   console.log(err);
@@ -24,15 +30,9 @@ try {
 // Login
 try {
   authRouter.post('/login', async function(req, res) {
-    const doc = new User({
-        phone: req.body.phone,
-        password: req.body.password,
-        name: req.body.name,
+    res.send({
+      message: 'Авторизация',
     });
-
-    const user = await doc.save();
-
-    res.send(user);
 });
 } catch(err) {
   console.log(err);
@@ -41,4 +41,4 @@ try {
   });
 }
 
-module.exports = authRouter;
+export default authRouter;
