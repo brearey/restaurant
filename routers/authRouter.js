@@ -19,17 +19,14 @@ try {
     if (!errors.isEmpty()) {
         return res.status(400).json(errors.array());
     }
-
-    res.json({
-      message: 'success'
+    // Save in database
+    const doc = new User({
+      phone: req.body.phone,
+      password: req.body.password,
+      name: req.body.name,
     });
-    // const doc = new User({
-    //   phone: req.body.phone,
-    //   password: req.body.password,
-    //   name: req.body.name,
-    // });
-    // const user = await doc.save();
-    // res.send(user);
+    const user = await doc.save();
+    res.send(user);
   });
 } catch(err) {
   console.log(err);
