@@ -5,8 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon index.js",
-    "prefill": "node ./prefill/prefill.js"
+    "dev": "npm i && nodemon index.js",
+    "prefill": "node ./prefill/prefill.js",
+    "test": "node test.js"
   },
   "author": "brearey4@gmail.com",
   "license": "ISC",
