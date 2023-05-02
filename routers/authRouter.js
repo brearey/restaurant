@@ -1,5 +1,6 @@
 import express from 'express';
 import User from '../entities/User.js';
+import { validationResult } from 'express-validator';
 import { loginValidation, registerValidation } from '../utils/validations.js';
 const authRouter = express.Router();
 
@@ -11,9 +12,16 @@ authRouter.use(function timeLog(req, res, next) {
 
 // Register
 try {
-  authRouter.post('/register', async function(req, res) {
-    res.send({
-      message: 'Регистрация',
+  authRouter.post('/register', registerValidation, async function(req, res) {
+
+    // Validate req data
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+    }
+
+    res.json({
+      message: 'success'
     });
     // const doc = new User({
     //   phone: req.body.phone,
