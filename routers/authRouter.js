@@ -13,17 +13,23 @@ authRouter.use(function timeLog(req, res, next) {
 // Register
 try {
   authRouter.post('/register', registerValidation, async function(req, res) {
-
+    const {phone, password, name} = req.body;
     // Validate req data
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json(errors.array());
     }
+    const isUsed = await User.findOne({phone});
+    if (isUsed) {
+      return res.status(402).json({
+        message: 'Данный телефон уже занят'
+      });
+    }
     // Save in database
     const doc = new User({
-      phone: req.body.phone,
-      password: req.body.password,
-      name: req.body.name,
+      phone: phone,
+      password: password,
+      name: name,
     });
     const user = await doc.save();
     res.send(user);
