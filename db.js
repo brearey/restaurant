@@ -4,8 +4,8 @@ dotenv.config();
 
 function databaseConnect() {
     mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('DB ok'))
-    .catch((err) => console.log('DB error', err));
+    .then(() => console.log('Database connected'))
+    .catch((err) => console.log('Error DB onnect', err));
 }
 
 export default databaseConnect;
