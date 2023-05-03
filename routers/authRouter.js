@@ -27,6 +27,7 @@ try {
     });
     const user = await doc.save();
     res.send(user);
+
   });
 } catch(err) {
   console.log(err);
