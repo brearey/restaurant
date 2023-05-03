@@ -6,43 +6,44 @@ dotenv.config();
 
 export const register = async (req, res) => {
     try {
+        const { phone, password, name } = req.body;
         // Validate req data
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json(errors.array());
         }
-
-        // Create doc for mongodb
+        // Check phone is exist
+        const isUsed = await User.findOne({ phone });
+        if (isUsed) {
+            return res.status(402).json({
+                message: 'Данный телефон уже занят'
+            });
+        }
+        // Save in database
         const doc = new User({
-            phone: req.body.phone,
-            password: req.body.password,
-            name: req.body.name,
+            phone: phone,
+            password: password,
+            name: name,
         });
         const user = await doc.save();
-
-        // Generate and send the JWT in response
-        const token = jwt.sign({_id: user._id}, proccess.env.JWT_SECRET, {expiresIn: '30d',});
-
-        // Вынос хэша пароля из ответа
-        const {passwordHash, ...userData} = user._doc;
-
-        // Response to client
-        res.json({
-            ...userData,
-            token,
-        });
+        res.send(user);
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Регистрация не удалась',
+            message: 'Не удалось создать пользователя'
         });
     }
 };
 
 export const login = async (req, res) => {
     try {
+        const { phone, password } = req.body;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json(errors.array());
+        }
         // Find user in DB
-        const user = await User.findOne({email: req.body.email});
+        const user = await User.findOne({ phone });
 
         // User not found
         if (!user) {
@@ -52,7 +53,7 @@ export const login = async (req, res) => {
         }
 
         // Check password
-        const isValidPass = req.body.password == user._doc.passwordHash;
+        const isValidPass = password == user._doc.password;
         if (!isValidPass) {
             return res.status(404).json({
                 message: 'Неверный логин или пароль'
@@ -60,21 +61,17 @@ export const login = async (req, res) => {
         }
 
         // Generate and send the JWT in response
-        const token = jwt.sign({_id: user._id}, proccess.env.JWT_SECRET, {expiresIn: '30d',});
-
-        // Вынос хэша пароля из ответа
-        const {passwordHash, ...userData} = user._doc;
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d', });
 
         // Response to client
         res.json({
-            ...userData,
             token,
         });
-    }
-    catch(err) {
+
+    } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Авторизация не удалось'
+            message: 'Не удалось авторизоваться'
         });
     }
 };
@@ -89,7 +86,7 @@ export const getMe = async (req, res) => {
             });
         }
         // Вынос хэша пароля из ответа
-        const {passwordHash, ...userData} = user._doc;
+        const { passwordHash, ...userData } = user._doc;
 
         // Response to client
         res.json(userData);
