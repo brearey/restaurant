@@ -10,3 +10,7 @@ export const registerValidation = [
     body('password', 'Пароль должен содержать минимум 5 символов').isString().isLength({ min: 5 }),
     body('name', 'Требуется имя').isLength({ min: 3 }),
 ];
+
+export const tokenValidation = [
+    body('token', 'Неверный токен').isString().isLength({min: 172, max: 172})
+];
