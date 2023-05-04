@@ -78,22 +78,27 @@ export const login = async (req, res) => {
 
 export const getMe = async (req, res) => {
     try {
-        const user = await User.findById(req.userId);
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json(errors.array());
+        }
+        const {token} = req.body;
+        // Decode userId
+        const userId = jwt.verify(token, process.env.JWT_SECRET)._id;
+        const user = await User.findById(userId);
 
         if (!user) {
             return res.status(404).json({
                 message: 'Пользователь не найден',
             });
         }
-        // Вынос хэша пароля из ответа
-        const { passwordHash, ...userData } = user._doc;
 
         // Response to client
-        res.json(userData);
+        res.json(user);
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Ошибка',
+            message: 'Ошибка получения пользователя',
         });
     }
 };
