@@ -9,6 +9,6 @@ restaurantRouter.use(function timeLog(req, res, next) {
 });
 
 // Get restaurants list
-restaurantRouter.get('/list', RestaurantController.getAll);
+restaurantRouter.get('/', RestaurantController.getAll);
 
 export default restaurantRouter;

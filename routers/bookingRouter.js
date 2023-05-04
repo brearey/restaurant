@@ -1,7 +1,7 @@
 import express from 'express';
 import Booking from '../entities/Booking.js';
 import { validationResult } from 'express-validator';
-import { bookingCreateValidation } from '../utils/validations.js';
+import { bookingCreateValidation, bookingDeleteValidation } from '../utils/validations.js';
 import Restaurant from '../entities/Restaurant.js';
 import User from '../entities/User.js';
 const bookingRouter = express.Router();
@@ -49,7 +49,7 @@ bookingRouter.get('/:id', function (req, res) {
 });
 
 // Create booking by id
-bookingRouter.post('/create', bookingCreateValidation, async function (req, res) {
+bookingRouter.post('/', bookingCreateValidation, async function (req, res) {
   // Validate req data
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -84,13 +84,24 @@ bookingRouter.post('/create', bookingCreateValidation, async function (req, res)
 });
 
 // Delete booking by id
-bookingRouter.delete('/:id', function (req, res) {
+bookingRouter.delete('/:id', bookingDeleteValidation, async function (req, res) {
+  // Validate req data
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json(errors.array());
+  }
   const booking_id = req.params.id;
-  res.send(
-    {
-      deleted_booking: booking_id
-    }
-  );
+  const booking = await Booking.findById(booking_id);
+  // Check booking exist
+  if (!booking) {
+    return res.status(404).json({
+      message: 'Заказ с таким ID не найден',
+    });
+  }
+  const result = await Booking.deleteOne(booking);
+  res.send({
+    message: 'Заказ удален',
+  });
 });
 
 export default bookingRouter;

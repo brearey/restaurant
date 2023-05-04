@@ -1,4 +1,4 @@
-import { body } from 'express-validator';
+import { body, param } from 'express-validator';
 
 export const loginValidation = [
     body('phone', 'Неверный формат телефона').isString().isLength({min: 10, max: 12}),
@@ -20,4 +20,8 @@ export const bookingCreateValidation = [
     body('restaurant_id', 'Неверный ID ресторана').isString().isLength({min: 24, max: 24}),
     body('slot_index', 'Неверный индекс слота').isNumeric(),
     body('guest_count', 'Неверное количество гостей').isNumeric(),
+];
+
+export const bookingDeleteValidation = [
+    param('id', 'Неверный ID заказа').isString().isLength({min: 24, max: 24}),
 ];
