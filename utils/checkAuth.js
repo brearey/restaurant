@@ -6,14 +6,12 @@ dotenv.config();
 export default(req, res, next) => {
     // Get token and delete Bearer word
     const token = (req.headers.authorization || '').replace(/Bearer\s?/, '');
-
     if (token) {
         try {
             // Decode token
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
             // Вшить в ответ ID пользователя
-            req.userId = decoded._id;
+            req.body.user_id = decoded._id;
 
             // Разрешить выполнять дальше
             next();

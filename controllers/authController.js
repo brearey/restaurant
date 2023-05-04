@@ -82,14 +82,12 @@ export const getMe = async (req, res) => {
         if (!errors.isEmpty()) {
             return res.status(400).json(errors.array());
         }
-        const {token} = req.body;
-        // Decode userId
-        const userId = jwt.verify(token, process.env.JWT_SECRET)._id;
+        const userId = req.body.user_id;
         const user = await User.findById(userId);
 
         if (!user) {
             return res.status(404).json({
-                message: 'Пользователь не найден',
+                message: 'Пользователь не найден' + userId,
             });
         }
 

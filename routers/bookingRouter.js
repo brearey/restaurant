@@ -2,6 +2,7 @@ import express from 'express';
 import Booking from '../entities/Booking.js';
 import { validationResult } from 'express-validator';
 import { bookingCreateValidation, bookingDeleteValidation } from '../utils/validations.js';
+import checkAuth from '../utils/checkAuth.js';
 import Restaurant from '../entities/Restaurant.js';
 import User from '../entities/User.js';
 const bookingRouter = express.Router();
@@ -49,7 +50,7 @@ bookingRouter.get('/:id', function (req, res) {
 });
 
 // Create booking by id
-bookingRouter.post('/', bookingCreateValidation, async function (req, res) {
+bookingRouter.post('/', checkAuth, bookingCreateValidation, async function (req, res) {
   // Validate req data
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -91,7 +92,7 @@ bookingRouter.post('/', bookingCreateValidation, async function (req, res) {
 });
 
 // Delete booking by id
-bookingRouter.delete('/:id', bookingDeleteValidation, async function (req, res) {
+bookingRouter.delete('/:id', checkAuth, bookingDeleteValidation, async function (req, res) {
   // Validate req data
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
