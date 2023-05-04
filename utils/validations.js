@@ -11,10 +11,6 @@ export const registerValidation = [
     body('name', 'Требуется имя').isLength({ min: 3 }),
 ];
 
-export const tokenValidation = [
-    body('token', 'Неверный токен').isString().isLength({min: 172, max: 172})
-];
-
 export const bookingCreateValidation = [
     body('user_id', 'Неверный ID пользователя').isString().isLength({min: 24, max: 24}),
     body('restaurant_id', 'Неверный ID ресторана').isString().isLength({min: 24, max: 24}),

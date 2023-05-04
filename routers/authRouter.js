@@ -1,6 +1,7 @@
 import express from 'express';
 import * as AuthController from '../controllers/authController.js';
-import { loginValidation, registerValidation, tokenValidation } from '../utils/validations.js';
+import checkAuth from '../utils/checkAuth.js';
+import { loginValidation, registerValidation } from '../utils/validations.js';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -19,6 +20,6 @@ authRouter.post('/register', registerValidation, AuthController.register);
 authRouter.post('/login', loginValidation, AuthController.login);
 
 // Me
-authRouter.get('/me', tokenValidation, AuthController.getMe);
+authRouter.get('/me', checkAuth, AuthController.getMe);
 
 export default authRouter;
