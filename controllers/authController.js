@@ -6,12 +6,12 @@ dotenv.config();
 
 export const register = async (req, res) => {
     try {
-        const { phone, password, name } = req.body;
         // Validate req data
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json(errors.array());
         }
+        const { phone, password, name } = req.body;
         // Check phone is exist
         const isUsed = await User.findOne({ phone });
         if (isUsed) {
