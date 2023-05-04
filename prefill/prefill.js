@@ -88,6 +88,11 @@ const restaurants = [
             },
         ],
     },
+    {
+        name: 'Тотоойук',
+        spec: 'Ойунского',
+        slots: [],
+    },
 ]
 
 const users = [

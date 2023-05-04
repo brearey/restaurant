@@ -72,6 +72,13 @@ bookingRouter.post('/', bookingCreateValidation, async function (req, res) {
     });
   }
 
+  // Есть ли свободные столики
+  if (restaurant.slots.length == 0) {
+    return res.status(404).json({
+      message: 'Нет свободных столиков',
+    });
+  }
+
   // Create booking
   const doc = new Booking({
     user_id: user_id,
