@@ -16,7 +16,7 @@ const restaurants = [
         slots: [
             {
                 date: '30 апреля 2023',
-                time: '15:00 - 16:00',
+                time: '15:00 - 16:00', //TODO fix this with Date
                 isBooked: false,
             },
             {
