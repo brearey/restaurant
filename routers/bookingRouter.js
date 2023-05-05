@@ -1,7 +1,7 @@
 import express from 'express';
 import Booking from '../entities/Booking.js';
 import { validationResult } from 'express-validator';
-import { bookingCreateValidation, bookingDeleteValidation } from '../utils/validations.js';
+import { bookingCreateValidation, bookingIdValidation } from '../utils/validations.js';
 import checkAuth from '../utils/checkAuth.js';
 import Restaurant from '../entities/Restaurant.js';
 import User from '../entities/User.js';
@@ -13,40 +13,18 @@ bookingRouter.use(function timeLog(req, res, next) {
   next();
 });
 
-// Get all bookings
-bookingRouter.get('/', function (req, res) {
-  res.send([
-    {
-      id: 'booking1',
-      user_id: 'user1',
-      restaurant_id: 'res1',
-      slot_index: 1,
-    },
-    {
-      id: 'booking2',
-      user_id: 'user2',
-      restaurant_id: 'res2',
-      slot_index: 2,
-    },
-    {
-      id: 'booking3',
-      user_id: 'user3',
-      restaurant_id: 'res3',
-      slot_index: 3,
-    },
-  ]);
-});
 // Get one booking by id
-bookingRouter.get('/:id', function (req, res) {
-  const booking_id = req.params.id;
-  res.send(
-    {
-      id: booking_id,
-      user_id: 'user' + booking_id,
-      restaurant_id: 'restaurant #' + booking_id,
-      slot_index: 1,
-    }
-  );
+bookingRouter.get('/', checkAuth, async function (req, res) {
+  // const booking_id = req.params.id;
+
+  const booking = await Booking.find({user_id: req.body.user_id});
+  if (!booking) {
+    return res.status(404).json({
+      message: 'У вас нет такого заказа'
+    });
+  }
+
+  res.send(booking);
 });
 
 // Create booking by id
@@ -92,7 +70,7 @@ bookingRouter.post('/', checkAuth, bookingCreateValidation, async function (req,
 });
 
 // Delete booking by id
-bookingRouter.delete('/:id', checkAuth, bookingDeleteValidation, async function (req, res) {
+bookingRouter.delete('/:id', checkAuth, bookingIdValidation, async function (req, res) {
   // Validate req data
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

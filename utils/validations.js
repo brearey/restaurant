@@ -18,6 +18,6 @@ export const bookingCreateValidation = [
     body('guest_count', 'Неверное количество гостей').isNumeric(),
 ];
 
-export const bookingDeleteValidation = [
+export const bookingIdValidation = [
     param('id', 'Неверный ID заказа').isString().isLength({min: 24, max: 24}),
 ];
