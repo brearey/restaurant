@@ -10,12 +10,12 @@ const RestaurantSchema = new mongoose.Schema({
         required: true,
     },
     slots: [{
-        date: {
-            type: String,
+        slot_start: {
+            type: Date,
             required: true,
         },
-        time: {
-            type: String,
+        slot_end: {
+            type: Date,
             required: true,
         },
         isBooked: {

@@ -13,11 +13,11 @@ bookingRouter.use(function timeLog(req, res, next) {
   next();
 });
 
-// Get one booking by id
+// Get my bookings
 bookingRouter.get('/', checkAuth, async function (req, res) {
   // const booking_id = req.params.id;
 
-  const booking = await Booking.find({user_id: req.body.user_id});
+  const booking = await Booking.find({ user_id: req.body.user_id });
   if (!booking) {
     return res.status(404).json({
       message: 'У вас нет такого заказа'
@@ -28,13 +28,13 @@ bookingRouter.get('/', checkAuth, async function (req, res) {
 });
 
 // Create booking by id
-bookingRouter.post('/', checkAuth, bookingCreateValidation, async function (req, res) { // TODO Добавить проверку свободных слотов по полученным слотам
+bookingRouter.post('/', checkAuth, bookingCreateValidation, async function (req, res) {
   // Validate req data
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json(errors.array());
   }
-  const { user_id, restaurant_id, slot_index, guest_count } = req.body;
+  const { user_id, restaurant_id, booking_start, booking_end, guest_count } = req.body;
 
   // Check rest exist
   const restaurant = await Restaurant.findById(restaurant_id);
@@ -58,11 +58,21 @@ bookingRouter.post('/', checkAuth, bookingCreateValidation, async function (req,
     });
   }
 
+  // Свободны ли столики
+  if (tablesBooked(restaurant.slots, booking_start, booking_end)) {
+    return res.status(404).json({
+      message: 'На указанное Вами время все столики заняты',
+    });
+  }
+
+
+
   // Create booking
   const doc = new Booking({
     user_id: user_id,
     restaurant_id: restaurant_id,
-    slot_index: slot_index,
+    booking_start: booking_start,
+    booking_end: booking_end,
     guest_count: guest_count
   });
   const booking = await doc.save();
@@ -89,5 +99,18 @@ bookingRouter.delete('/:id', checkAuth, bookingIdValidation, async function (req
     message: 'Заказ удален',
   });
 });
+
+function tablesBooked(slots, newBookStart, newBookEnd) {
+  let newBookingStart = new Date(newBookStart).getTime();
+  let newBookingEnd = new Date(newBookEnd).getTime();
+
+  for (const slot of slots) {
+    if ((newBookingStart >= slot.slot_start && newBookingStart < slot.slot_end ||
+      slot.slot_start >= newBookingStart && slot.slot_start < newBookingEnd) && slot.isBooked) {
+      return true;
+    }
+  }
+  return false;
+}
 
 export default bookingRouter;

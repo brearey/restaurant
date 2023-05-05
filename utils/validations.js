@@ -14,7 +14,8 @@ export const registerValidation = [
 export const bookingCreateValidation = [
     body('user_id', 'Неверный ID пользователя').isString().isLength({min: 24, max: 24}),
     body('restaurant_id', 'Неверный ID ресторана').isString().isLength({min: 24, max: 24}),
-    body('slot_index', 'Неверный индекс слота').isNumeric(),
+    body('booking_start', 'Неверный формат времени начала').isString(),
+    body('booking_end', 'Неверный формат времени окончания').isString(),
     body('guest_count', 'Неверное количество гостей').isNumeric(),
 ];
 

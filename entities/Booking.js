@@ -11,8 +11,12 @@ const BookingSchema = new mongoose.Schema({
         required: true,
         ref: 'Restaurant',
     },
-    slot_index: {
-        type: Number,
+    booking_start: {
+        type: Date,
+        required: true,
+    },
+    booking_end: {
+        type: Date,
         required: true,
     },
     guest_count: {
