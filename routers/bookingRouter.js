@@ -28,7 +28,7 @@ bookingRouter.get('/', checkAuth, async function (req, res) {
 });
 
 // Create booking by id
-bookingRouter.post('/', checkAuth, bookingCreateValidation, async function (req, res) {
+bookingRouter.post('/', checkAuth, bookingCreateValidation, async function (req, res) { // TODO Добавить проверку свободных слотов по полученным слотам
   // Validate req data
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
