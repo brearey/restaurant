@@ -5,6 +5,7 @@ import { bookingCreateValidation, bookingIdValidation } from '../utils/validatio
 import checkAuth from '../utils/checkAuth.js';
 import Restaurant from '../entities/Restaurant.js';
 import User from '../entities/User.js';
+import createReminder from '../notification/reminder.js';
 const bookingRouter = express.Router();
 
 // middleware that is specific to this router
@@ -76,6 +77,9 @@ bookingRouter.post('/', checkAuth, bookingCreateValidation, async function (req,
     guest_count: guest_count
   });
   const booking = await doc.save();
+  // Create reminder
+  createReminder(booking_start);
+
   res.send(booking);
 });
 
