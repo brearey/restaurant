@@ -14,11 +14,8 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:3000",
-        // or with an array of origins
-        // origin: ["https://my-frontend.com", "https://my-other-frontend.com", "http://localhost:3000"],
-        credentials: true
-      }
+        origin: '*'
+    }
 });
 
 databaseConnect();
@@ -33,6 +30,22 @@ app.get('/remind', (req, res) => {
     res.json({
         reminder: createReminder(Date.now())
     });
+});
+
+// Test client for socket io
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+app.get('/client', (req, res) => {
+    var fileName = './client/index.html';
+    res.sendFile(fileName, { root: __dirname }, function (err) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log('Sent:', fileName);
+        }
+    })
 });
 
 io.on("connection", (socket) => {
