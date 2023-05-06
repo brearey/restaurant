@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script
+            src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+            integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+            crossorigin="anonymous"
+        ></script>
+        <title>Получение уведомлений через Socket.io</title>
+    </head>
+    <body>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const socket = io("http://localhost:3000", {
+                    withCredentials: true,
+                    extraHeaders: {
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE",
+                    },
+                });
+            });
+        </script>
+    </body>
+</html>

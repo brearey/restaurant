@@ -1,4 +1,6 @@
 import express from 'express';
+import { createServer } from "http";
+import { Server } from "socket.io";
 import databaseConnect from './db.js';
 import bookingRouter from './routers/bookingRouter.js';
 import restaurantRouter from './routers/restaurantRouter.js';
@@ -9,6 +11,15 @@ dotenv.config();
 const PORT = process.env.PORT || 3000;
 
 const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+    cors: {
+        origin: "http://localhost:3000",
+        // or with an array of origins
+        // origin: ["https://my-frontend.com", "https://my-other-frontend.com", "http://localhost:3000"],
+        credentials: true
+      }
+});
 
 databaseConnect();
 
@@ -24,7 +35,15 @@ app.get('/remind', (req, res) => {
     });
 });
 
+io.on("connection", (socket) => {
+    console.log(`User ${socket} is connected`);
+});
+
 // Start app
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
     console.log(`Сервер запущен на порту: ${PORT}`)
 });
+
+
+
+
