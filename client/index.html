@@ -12,13 +12,36 @@
         <title>Получение уведомлений через Socket.io</title>
     </head>
     <body>
+
+        <input type="text" class="input-name">
+        <button onclick="connect()">Connect</button>
+        <button onclick="disconnect()">Disconnect</button>
         
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-                const socket = io("http://localhost:3000",{
-                    withCredentials: true,
-                });
+                
             });
+
+            let socket;
+
+            function connect() {
+                const name = document.querySelector('.input-name').value;
+                socket = io("http://localhost:3000");
+                console.log(socket.id);
+                socket.emit('auth', {name});
+
+                socket.on('notify', (message) => {
+                    console.log(message);
+                });
+            }
+
+            function disconnect() {
+                if (socket) {
+                    console.log('disconnect');
+                    console.dir(socket);
+                    socket.disconnect();
+                }
+            }
         </script>
     </body>
 </html>
