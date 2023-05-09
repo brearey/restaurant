@@ -1,14 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
         <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
+        <title>Клиент должен получить уведомление</title>
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+        <!-- Не используйте это в production -->
+        <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
     </head>
     <body>
-        <div>asd</div>
-        <div>asd</div>
-        <div>asd</div>
+        <div id="root"></div>
+        <script type="text/babel">
+            const App = () => {
+                return <p>App component</p>;
+            };
+
+            class BigApp extends React.Component {
+                render() {
+                    return <App />;
+                }
+            }
+
+            ReactDOM.render(<BigApp />, document.getElementById("root"));
+        </script>
     </body>
 </html>
