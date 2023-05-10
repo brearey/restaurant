@@ -1,33 +1,20 @@
-const RestaurantsList = async () => {
-    const [list, setList] = useState('');
+const RestaurantsList = () => {
+    const [list, setList] = React.useState([]);
+    React.useEffect(() => {
+        // fetch data
+        const dataFetch = async () => {
+            const data = await (
+                await fetch("http://localhost:3000/restaurant/")).json();
+            // set state when the data received
+            setList(data);
+        };
 
-    const response = await fetch('http://localhost:3000/restaurant', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        }
-    });
-    let restaurants = await response.json();
-    console.log(restaurants);
-    setList(
-        restaurants.map((rest) => {
-            <Restaurant name={rest.name} spec={rest.spec} slots={rest.slots} />
-        })
-    );
+        dataFetch();
+    }, []);
+
     return (
         <div className='restaurants-list'>
-            {list}
+            {/* <Restaurant name={list[0].name} spec={list[0].spec} slots={list[0].slots} /> */}
         </div>
     );
-}
-
-async function getRestaurantsList() {
-    const response = await fetch('http://localhost:3000/restaurant', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        }
-    });
-    let result = await response.json();
-    return result;
 }
