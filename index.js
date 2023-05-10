@@ -7,6 +7,11 @@ import restaurantRouter from './routers/restaurantRouter.js';
 import authRouter from './routers/authRouter.js';
 import * as dotenv from 'dotenv';
 import createReminder from './notification/reminder.js';
+
+// Test find user for socket
+import User from './entities/User.js';
+import jwt from 'jsonwebtoken';
+
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
@@ -18,6 +23,16 @@ const io = new Server(httpServer, {
     }
 });
 
+// TODO: Если что
+// Test connecting react app. Fix CORS problem
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
+
 databaseConnect();
 
 app.use(express.json());
@@ -25,60 +40,40 @@ app.use('/booking', bookingRouter);
 app.use('/restaurant', restaurantRouter);
 app.use('/auth', authRouter);
 
-// TODO: Если что
-// Test connecting react app. Fix CORS problem
-// app.use(function(req, res, next) {
-//     res.setHeader('Access-Control-Allow-Origin', '*');
-//     res.setHeader('Access-Control-Allow-Methods', 'GET');
-//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-//     res.setHeader('Access-Control-Allow-Credentials', true);
-//     next();
-// });
-
 //TODO global connected user
 let socket;
 // Test create reminder with request
 app.get('/remind', (req, res) => {
     res.json({
-        reminder: createReminder(Date.now())
+        reminder: createReminder(Date.now(), socket)
     });
     if (socket) {
         socket.in('notification_room').emit('notify', 'i have a remind');
     }
 });
 
-// Test client for socket io
-// import { fileURLToPath } from 'url';
-// import { dirname } from 'path';
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
-// app.get('/client', (req, res) => {
-//     var fileName = './client/index.html';
-//     res.sendFile(fileName, { root: __dirname }, function (err) {
-//         if (err) {
-//             console.log(err);
-//         } else {
-//             console.log('Sent:', fileName);
-//         }
-//     })
-// });
-
-io.on("connection", (_socket) => {
+io.on("connection", async (_socket) => {
     socket = _socket;
-    //Joinc client to the room
+    //Join client to the room
     socket.join('notification_room');
-    console.log(`Пользователь ${socket.auth} подключился с адреса ${socket.address}`);
-    console.log(`Данные пользователя: ${socket.data.username}`);
-    console.log(`Все сокеты: ${io.sockets.clients}`);
-    socket.emit('notify', `Ты успешно подключился к ${socket.rooms.values().next().value}`);
+    //Вытащить имя
+    const decoded = jwt.verify(socket.handshake.auth.token, process.env.JWT_SECRET);
+    // Find user in DB
+    const user = await User.findById(decoded._id);
+    console.log(`Добро пожаловать, ${user.name}!`);
 
-    socket.on("auth", (data) => {
-        console.log('Собыите auth:');
-        console.dir(data);
-    });
+    //Test create reminder
+    socket.emit('notify', createReminder(Date.now(), socket, user.name));
+
+    // User not found
+    if (!user) {
+        return res.status(404).json({
+            message: 'Пользователь не найден',
+        });
+    }
 });
 
 // Start app
 httpServer.listen(PORT, () => {
-    console.log(`Сервер запущен на порту: ${PORT}`)
+    console.log(`Сервер запущен на порту: ${PORT}`);
 });

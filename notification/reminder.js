@@ -9,7 +9,7 @@
 */
 import { scheduleJob } from 'node-schedule';
 
-export default function createReminder(booking_start) {
+export default function createReminder(booking_start, socket, username) {
     try {
         if (!compareBookingStartWithNow(booking_start)) {
             return {
@@ -18,8 +18,9 @@ export default function createReminder(booking_start) {
         }
         const date = getRemindTime(booking_start);
         scheduleJob(date, function () {
-            console.log('ITS REMIND TIME!', Date.now());
+            socket.emit('notify', `Время пришло, господин(жа) ${username}!`);
         });
+        return `Уведмоление создано для ${username}`
     } catch (err) {
         console.log(err);
     }
@@ -34,7 +35,7 @@ function getRemindTime(booking_start) {
 
 function compareBookingStartWithNow(booking_start) {
     const date = new Date(booking_start);
-    const now = Date.now();
+    const now = Date.now() - 1000;
 
     return date > now;
 }
