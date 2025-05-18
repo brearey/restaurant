@@ -1,5 +1,3 @@
-Oneself_architecture.docx
-~$eself_architecture.docx
 # mongodb
 db_connect.js
 
@@ -133,3 +131,4 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+.idea
