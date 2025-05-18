@@ -1,12 +1,7 @@
 import express from 'express';
 import * as RestaurantController from '../controllers/restaurantController.js';
-const restaurantRouter = express.Router();
 
-// middleware that is specific to this router
-restaurantRouter.use(function timeLog(req, res, next) {
-  console.log('TODO: log this ', Date.now());
-  next();
-});
+const restaurantRouter = express.Router();
 
 // Get restaurants list
 restaurantRouter.get('/', RestaurantController.getAll);

@@ -8,12 +8,6 @@ import User from '../entities/User.js';
 import createReminder from '../notification/reminder.js';
 const bookingRouter = express.Router();
 
-// middleware that is specific to this router
-bookingRouter.use(function timeLog(req, res, next) {
-  console.log('TODO: log this ', Date.now());
-  next();
-});
-
 // Get my bookings
 bookingRouter.get('/', checkAuth, async function (req, res) {
   // const booking_id = req.params.id;
